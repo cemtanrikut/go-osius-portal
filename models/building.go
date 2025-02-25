@@ -1,7 +1,7 @@
 package models
 
 type Building struct {
-	ID              string `bson:"_id,omitempty" json:"id"`
+	ID              uint   `gorm:"primaryKey"`
 	LocationName    string `bson:"name" json:"name"`
 	LocationAddress string `bson:"address" json:"address"`
 	HouseNumber     string `bson:"house_number" json:"house_number"`
@@ -15,7 +15,7 @@ type Building struct {
 }
 
 type Room struct {
-	ID            string `bson:"_id,omitempty" json:"id"`
+	ID            uint   `gorm:"primaryKey"`
 	BuildingID    string `bson:"building_id" json:"building_id"`
 	FloorNumber   string `bson:"floor_number" json:"floor_number"`
 	FloorSquare   string `bson:"floor_square" json:"floor_square"`
@@ -30,7 +30,7 @@ type Room struct {
 }
 
 type Member struct {
-	ID                        string `bson:"_id,omitempty" json:"id"`
+	ID                        uint   `gorm:"primaryKey"`
 	BuildingID                string `bson:"building_id" json:"building_id"`
 	Name                      string `bson:"name" json:"name"`
 	Email                     string `bson:"email" json:"email"`

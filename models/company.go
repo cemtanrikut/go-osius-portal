@@ -1,7 +1,7 @@
 package models
 
 type Company struct {
-	ID          string      `bson:"_id,omitempty" json:"id"`
+	ID          uint        `gorm:"primaryKey"`
 	Name        string      `bson:"name" json:"name"`
 	Phone       string      `bson:"phone" json:"phone"`
 	Email       string      `bson:"email" json:"email"`
