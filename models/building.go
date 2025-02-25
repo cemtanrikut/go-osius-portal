@@ -14,6 +14,21 @@ type Building struct {
 	CreatedDate     string `bson:"created_date" json:"created_date"`
 }
 
+type Room struct {
+	ID            string `bson:"_id,omitempty" json:"id"`
+	BuildingID    string `bson:"building_id" json:"building_id"`
+	FloorNumber   string `bson:"floor_number" json:"floor_number"`
+	FloorSquare   string `bson:"floor_square" json:"floor_square"`
+	Buitenzijde   string `bson:"buitenzijde" json:"buitenzijde"`
+	RoomType      string `bson:"room_type" json:"room_type"`
+	WallType      string `bson:"wall_type" json:"wall_type"`
+	RoomNumber    string `bson:"room_number" json:"room_number"`
+	Binnenzijde   string `bson:"binnenzijde" json:"binnenzijde"`
+	SeperstieGlas string `bson:"seperstie_glas" json:"seperstie_glas"`
+	UsageType     string `bson:"usage_type" json:"usage_type"`
+	FloorType     string `bson:"floor_type" json:"floor_type"`
+}
+
 type Member struct {
 	ID                        string `bson:"_id,omitempty" json:"id"`
 	BuildingID                string `bson:"building_id" json:"building_id"`
