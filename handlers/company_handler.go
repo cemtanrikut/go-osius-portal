@@ -17,3 +17,9 @@ func CreateCompany(c *gin.Context) {
 	config.DB.Create(&company)
 	c.JSON(http.StatusOK, company)
 }
+
+func GetCompanies(c *gin.Context) {
+	var companies []models.Company
+	config.DB.Find(&companies)
+	c.JSON(http.StatusOK, companies)
+}
