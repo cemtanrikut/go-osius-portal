@@ -35,3 +35,21 @@ func GetCompanyByID(c *gin.Context) {
 
 	c.JSON(http.StatusOK, company)
 }
+
+func UpdateCompany(c *gin.Context) {
+	var company models.Company
+	id := c.Param("id")
+
+	if err := config.DB.First(&company, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Company not found"})
+		return
+	}
+
+	if err := c.ShouldBindJSON(&company); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	config.DB.Save(&company)
+	c.JSON(http.StatusOK, company)
+}
