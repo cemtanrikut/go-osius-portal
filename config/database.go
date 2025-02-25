@@ -5,6 +5,7 @@ import (
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"main.go/models"
 )
 
 var DB *gorm.DB
@@ -16,6 +17,8 @@ func ConnectDatabase() {
 	}
 
 	DB = database
+	database.AutoMigrate(&models.Company{})
+
 	log.Println("DB connection succesfully!")
 
 }

@@ -23,3 +23,15 @@ func GetCompanies(c *gin.Context) {
 	config.DB.Find(&companies)
 	c.JSON(http.StatusOK, companies)
 }
+
+func GetCompanyByID(c *gin.Context) {
+	var company models.Company
+	id := c.Param("id")
+
+	if err := config.DB.First(&company, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Company not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, company)
+}

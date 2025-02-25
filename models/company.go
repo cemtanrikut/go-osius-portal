@@ -1,14 +1,15 @@
 package models
 
 type Company struct {
-	ID          uint        `gorm:"primaryKey"`
-	Name        string      `bson:"name" json:"name"`
-	Phone       string      `bson:"phone" json:"phone"`
-	Email       string      `bson:"email" json:"email"`
-	Tags        string      `bson:"tags" json:"tags"`
-	Status      bool        `bson:"status" json:"status"`
-	CreatedAt   string      `bson:"created_at" json:"created_at"`
-	CompanyInfo CompanyInfo `bson:"company_info" json:"company_info"`
+	ID                    uint                  `gorm:"primaryKey"`
+	Name                  string                `bson:"name" json:"name"`
+	Phone                 string                `bson:"phone" json:"phone"`
+	Email                 string                `bson:"email" json:"email"`
+	Tags                  string                `bson:"tags" json:"tags"`
+	Status                bool                  `bson:"status" json:"status"`
+	CreatedAt             string                `bson:"created_at" json:"created_at"`
+	CompanyInfo           CompanyInfo           `bson:"company_info" json:"company_info" gorm:"embedded"`
+	CompanyRepresentative CompanyRepresentative `bson:"company_representative" json:"company_representative" gorm:"embedded"`
 }
 
 type CompanyInfo struct {
