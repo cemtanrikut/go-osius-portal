@@ -17,7 +17,7 @@ func ConnectDatabase() {
 	}
 
 	DB = database
-	database.AutoMigrate(&models.Company{})
+	database.AutoMigrate(&models.Company{}, &models.Building{})
 
 	log.Println("DB connection succesfully!")
 
