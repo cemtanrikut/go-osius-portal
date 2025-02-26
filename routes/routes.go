@@ -19,4 +19,11 @@ func SetupRoutes(r *gin.Engine) {
 	r.GET("/buildings/:id", handlers.GetBuildingByID)
 	r.PUT("/buildings/:id", handlers.UpdateBuilding)
 	r.DELETE("/buildings/:id", handlers.DeleteBuilding)
+
+	// Room
+	r.POST("/rooms", handlers.CreateRoom)
+	r.GET("/rooms", handlers.GetRooms)
+	r.GET("/rooms/:id", handlers.GetRoomByID)
+	r.PUT("/rooms/:id", handlers.UpdateRoom)
+	r.DELETE("/rooms/:id", handlers.DeleteRoom)
 }
