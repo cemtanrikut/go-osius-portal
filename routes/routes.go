@@ -26,4 +26,11 @@ func SetupRoutes(r *gin.Engine) {
 	r.GET("/rooms/:id", handlers.GetRoomByID)
 	r.PUT("/rooms/:id", handlers.UpdateRoom)
 	r.DELETE("/rooms/:id", handlers.DeleteRoom)
+
+	// Member
+	r.POST("/members", handlers.CreateMember)
+	r.GET("/members", handlers.GetMembers)
+	r.GET("/members/:id", handlers.GetMemberByID)
+	r.PUT("/members/:id", handlers.UpdateMember)
+	r.DELETE("/members/:id", handlers.DeleteMember)
 }
