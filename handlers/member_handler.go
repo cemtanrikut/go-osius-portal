@@ -8,7 +8,16 @@ import (
 	"main.go/models"
 )
 
-// ✅ Creates member (POST /members)
+// CreateMember godoc
+// @Summary Creates a new member
+// @Description Adds a new member to the database
+// @Tags members
+// @Accept  json
+// @Produce  json
+// @Param   member  body     models.Member  true  "Member data"
+// @Success 201      {object} models.Member
+// @Failure 400      {object} map[string]string
+// @Router  /members [post]
 func CreateMember(c *gin.Context) {
 	var member models.Member
 	if err := c.ShouldBindJSON(&member); err != nil {
@@ -20,14 +29,29 @@ func CreateMember(c *gin.Context) {
 	c.JSON(http.StatusCreated, member)
 }
 
-// ✅ Gets all members (GET /members)
+// GetMembers godoc
+// @Summary Retrieves all members
+// @Description Gets a list of all members
+// @Tags members
+// @Produce  json
+// @Success 200  {array}  models.Member
+// @Failure 500  {object} map[string]string
+// @Router  /members [get]
 func GetMembers(c *gin.Context) {
 	var members []models.Member
 	config.DB.Find(&members)
 	c.JSON(http.StatusOK, members)
 }
 
-// ✅ Gets member by id (GET /members/:id)
+// GetMemberByID godoc
+// @Summary Retrieves a member by ID
+// @Description Gets a specific member using its ID
+// @Tags members
+// @Produce  json
+// @Param   id   path     int  true  "Member ID"
+// @Success 200  {object} models.Member
+// @Failure 404  {object} map[string]string
+// @Router  /members/{id} [get]
 func GetMemberByID(c *gin.Context) {
 	var member models.Member
 	id := c.Param("id")
@@ -40,7 +64,18 @@ func GetMemberByID(c *gin.Context) {
 	c.JSON(http.StatusOK, member)
 }
 
-// ✅ Updates a member (PUT /members/:id)
+// UpdateMember godoc
+// @Summary Updates a member
+// @Description Updates an existing member by ID
+// @Tags members
+// @Accept  json
+// @Produce  json
+// @Param   id        path     int              true  "Member ID"
+// @Param   member  body     models.Member  true  "Updated member data"
+// @Success 200      {object} models.Member
+// @Failure 400      {object} map[string]string
+// @Failure 404      {object} map[string]string
+// @Router  /members/{id} [put]
 func UpdateMember(c *gin.Context) {
 	var member models.Member
 	id := c.Param("id")
@@ -59,7 +94,14 @@ func UpdateMember(c *gin.Context) {
 	c.JSON(http.StatusOK, member)
 }
 
-// ✅ Deletes a member (DELETE /members/:id)
+// DeleteMember godoc
+// @Summary Deletes a member
+// @Description Deletes a specific member using its ID
+// @Tags members
+// @Param   id   path     int  true  "Member ID"
+// @Success 200  {object} map[string]string
+// @Failure 404  {object} map[string]string
+// @Router  /members/{id} [delete]
 func DeleteMember(c *gin.Context) {
 	var member models.Member
 	id := c.Param("id")

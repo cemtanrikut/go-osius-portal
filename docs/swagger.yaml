@@ -72,6 +72,29 @@ definitions:
       phone:
         type: string
     type: object
+  models.Member:
+    properties:
+      address:
+        type: string
+      bill_to:
+        type: string
+      building_id:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      invoice_shipping_preference:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+      postcode:
+        type: string
+      status:
+        type: boolean
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -349,4 +372,139 @@ paths:
       summary: Updates a company
       tags:
       - companies
+  /members:
+    get:
+      description: Gets a list of all members
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Member'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Retrieves all members
+      tags:
+      - members
+    post:
+      consumes:
+      - application/json
+      description: Adds a new member to the database
+      parameters:
+      - description: Member data
+        in: body
+        name: member
+        required: true
+        schema:
+          $ref: '#/definitions/models.Member'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Member'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Creates a new member
+      tags:
+      - members
+  /members/{id}:
+    delete:
+      description: Deletes a specific member using its ID
+      parameters:
+      - description: Member ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Deletes a member
+      tags:
+      - members
+    get:
+      description: Gets a specific member using its ID
+      parameters:
+      - description: Member ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Member'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Retrieves a member by ID
+      tags:
+      - members
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing member by ID
+      parameters:
+      - description: Member ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated member data
+        in: body
+        name: member
+        required: true
+        schema:
+          $ref: '#/definitions/models.Member'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Member'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Updates a member
+      tags:
+      - members
 swagger: "2.0"
