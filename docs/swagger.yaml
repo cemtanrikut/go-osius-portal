@@ -122,6 +122,37 @@ definitions:
       wall_type:
         type: string
     type: object
+  models.Ticket:
+    properties:
+      company:
+        type: string
+      completed_date:
+        type: string
+      create_date:
+        type: string
+      description:
+        type: string
+      files:
+        type: string
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      location:
+        type: string
+      person:
+        type: string
+      referance_no:
+        type: string
+      status:
+        type: string
+      ticket_type:
+        type: string
+      title:
+        type: string
+      update_date:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -669,4 +700,139 @@ paths:
       summary: Updates a room
       tags:
       - rooms
+  /tickets:
+    get:
+      description: Gets a list of all tickets
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Ticket'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Retrieves all tickets
+      tags:
+      - tickets
+    post:
+      consumes:
+      - application/json
+      description: Adds a new ticket to the database
+      parameters:
+      - description: Ticket data
+        in: body
+        name: ticket
+        required: true
+        schema:
+          $ref: '#/definitions/models.Ticket'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Ticket'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Creates a new ticket
+      tags:
+      - tickets
+  /tickets/{id}:
+    delete:
+      description: Deletes a specific ticket using its ID
+      parameters:
+      - description: Ticket ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Deletes a ticket
+      tags:
+      - tickets
+    get:
+      description: Gets a specific ticket using its ID
+      parameters:
+      - description: Ticket ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Ticket'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Retrieves a ticket by ID
+      tags:
+      - tickets
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing ticket by ID
+      parameters:
+      - description: Ticket ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated ticket data
+        in: body
+        name: ticket
+        required: true
+        schema:
+          $ref: '#/definitions/models.Ticket'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Ticket'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Updates a ticket
+      tags:
+      - tickets
 swagger: "2.0"

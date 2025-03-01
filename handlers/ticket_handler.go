@@ -8,7 +8,16 @@ import (
 	"main.go/models"
 )
 
-// ✅ Creates Ticket (POST /tickets)
+// CreateTicket godoc
+// @Summary Creates a new ticket
+// @Description Adds a new ticket to the database
+// @Tags tickets
+// @Accept  json
+// @Produce  json
+// @Param   ticket  body     models.Ticket  true  "Ticket data"
+// @Success 201      {object} models.Ticket
+// @Failure 400      {object} map[string]string
+// @Router  /tickets [post]
 func CreateTicket(c *gin.Context) {
 	var ticket models.Ticket
 	if err := c.ShouldBindJSON(&ticket); err != nil {
@@ -20,14 +29,29 @@ func CreateTicket(c *gin.Context) {
 	c.JSON(http.StatusCreated, ticket)
 }
 
-// ✅ Gets all tickets (GET /tickets)
+// GetTickets godoc
+// @Summary Retrieves all tickets
+// @Description Gets a list of all tickets
+// @Tags tickets
+// @Produce  json
+// @Success 200  {array}  models.Ticket
+// @Failure 500  {object} map[string]string
+// @Router  /tickets [get]
 func GetTickets(c *gin.Context) {
 	var tickets []models.Ticket
 	config.DB.Find(&tickets)
 	c.JSON(http.StatusOK, tickets)
 }
 
-// ✅ Gets a ticket by id (GET /tickets/:id)
+// GetTicketByID godoc
+// @Summary Retrieves a ticket by ID
+// @Description Gets a specific ticket using its ID
+// @Tags tickets
+// @Produce  json
+// @Param   id   path     int  true  "Ticket ID"
+// @Success 200  {object} models.Ticket
+// @Failure 404  {object} map[string]string
+// @Router  /tickets/{id} [get]
 func GetTicketByID(c *gin.Context) {
 	var ticket models.Ticket
 	id := c.Param("id")
@@ -40,7 +64,18 @@ func GetTicketByID(c *gin.Context) {
 	c.JSON(http.StatusOK, ticket)
 }
 
-// ✅ Update a ticket by id (PUT /tickets/:id)
+// UpdateTicket godoc
+// @Summary Updates a ticket
+// @Description Updates an existing ticket by ID
+// @Tags tickets
+// @Accept  json
+// @Produce  json
+// @Param   id        path     int              true  "Ticket ID"
+// @Param   ticket    body     models.Ticket  true  "Updated ticket data"
+// @Success 200      {object} models.Ticket
+// @Failure 400      {object} map[string]string
+// @Failure 404      {object} map[string]string
+// @Router  /tickets/{id} [put]
 func UpdateTicket(c *gin.Context) {
 	var ticket models.Ticket
 	id := c.Param("id")
@@ -59,7 +94,14 @@ func UpdateTicket(c *gin.Context) {
 	c.JSON(http.StatusOK, ticket)
 }
 
-// ✅ Deletes a ticket by id (DELETE /tickets/:id)
+// DeleteTicket godoc
+// @Summary Deletes a ticket
+// @Description Deletes a specific ticket using its ID
+// @Tags tickets
+// @Param   id   path     int  true  "Ticket ID"
+// @Success 200  {object} map[string]string
+// @Failure 404  {object} map[string]string
+// @Router  /tickets/{id} [delete]
 func DeleteTicket(c *gin.Context) {
 	var ticket models.Ticket
 	id := c.Param("id")
