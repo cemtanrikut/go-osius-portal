@@ -95,6 +95,33 @@ definitions:
       status:
         type: boolean
     type: object
+  models.Room:
+    properties:
+      binnenzijde:
+        type: string
+      building_id:
+        type: string
+      buitenzijde:
+        type: string
+      floor_number:
+        type: string
+      floor_square:
+        type: string
+      floor_type:
+        type: string
+      id:
+        type: integer
+      room_number:
+        type: string
+      room_type:
+        type: string
+      seperstie_glas:
+        type: string
+      usage_type:
+        type: string
+      wall_type:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -507,4 +534,139 @@ paths:
       summary: Updates a member
       tags:
       - members
+  /rooms:
+    get:
+      description: Gets a list of all rooms
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Room'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Retrieves all rooms
+      tags:
+      - rooms
+    post:
+      consumes:
+      - application/json
+      description: Adds a new room to the database
+      parameters:
+      - description: Room data
+        in: body
+        name: room
+        required: true
+        schema:
+          $ref: '#/definitions/models.Room'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Room'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Creates a new room
+      tags:
+      - rooms
+  /rooms/{id}:
+    delete:
+      description: Deletes a specific room using its ID
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Deletes a room
+      tags:
+      - rooms
+    get:
+      description: Gets a specific room using its ID
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Room'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Retrieves a room by ID
+      tags:
+      - rooms
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing room by ID
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated room data
+        in: body
+        name: room
+        required: true
+        schema:
+          $ref: '#/definitions/models.Room'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Room'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Updates a room
+      tags:
+      - rooms
 swagger: "2.0"
