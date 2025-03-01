@@ -8,7 +8,16 @@ import (
 	"main.go/models"
 )
 
-// ✅ Creates company (POST /companies)
+// CreateCompany godoc
+// @Summary Creates a new company
+// @Description Adds a new company to the database
+// @Tags companies
+// @Accept  json
+// @Produce  json
+// @Param   company  body     models.Company  true  "Company data"
+// @Success 201      {object} models.Company
+// @Failure 400      {object} map[string]string
+// @Router  /companies [post]
 func CreateCompany(c *gin.Context) {
 	var company models.Company
 	if err := c.ShouldBindJSON(&company); err != nil {
@@ -19,14 +28,29 @@ func CreateCompany(c *gin.Context) {
 	c.JSON(http.StatusOK, company)
 }
 
-// ✅ Gets all companies (GET /companies)
+// GetCompanies godoc
+// @Summary Retrieves all companies
+// @Description Gets a list of all companies
+// @Tags companies
+// @Produce  json
+// @Success 200  {array}  models.Company
+// @Failure 500  {object} map[string]string
+// @Router  /companies [get]
 func GetCompanies(c *gin.Context) {
 	var companies []models.Company
 	config.DB.Find(&companies)
 	c.JSON(http.StatusOK, companies)
 }
 
-// ✅ GetCompanyByID (GET /companies/:id)
+// GetCompanyByID godoc
+// @Summary Retrieves a company by ID
+// @Description Gets a specific company using its ID
+// @Tags companies
+// @Produce  json
+// @Param   id   path     int  true  "Company ID"
+// @Success 200  {object} models.Company
+// @Failure 404  {object} map[string]string
+// @Router  /companies/{id} [get]
 func GetCompanyByID(c *gin.Context) {
 	var company models.Company
 	id := c.Param("id")
@@ -39,7 +63,17 @@ func GetCompanyByID(c *gin.Context) {
 	c.JSON(http.StatusOK, company)
 }
 
-// ✅ Update company (PUT /companies/:id)
+// @Summary Updates a company
+// @Description Updates an existing company by ID
+// @Tags companies
+// @Accept  json
+// @Produce  json
+// @Param   id        path     int              true  "Company ID"
+// @Param   company  body     models.Company  true  "Updated company data"
+// @Success 200      {object} models.Company
+// @Failure 400      {object} map[string]string
+// @Failure 404      {object} map[string]string
+// @Router  /companies/{id} [put]
 func UpdateCompany(c *gin.Context) {
 	var company models.Company
 	id := c.Param("id")
@@ -58,7 +92,14 @@ func UpdateCompany(c *gin.Context) {
 	c.JSON(http.StatusOK, company)
 }
 
-// ✅ Delete company (DELETE /companies/:id)
+// DeleteCompany godoc
+// @Summary Deletes a company
+// @Description Deletes a specific company using its ID
+// @Tags companies
+// @Param   id   path     int  true  "Company ID"
+// @Success 200  {object} map[string]string
+// @Failure 404  {object} map[string]string
+// @Router  /companies/{id} [delete]
 func DeleteCompany(c *gin.Context) {
 	var company models.Company
 	id := c.Param("id")

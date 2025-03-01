@@ -25,6 +25,53 @@ definitions:
       status:
         type: boolean
     type: object
+  models.Company:
+    properties:
+      company_info:
+        $ref: '#/definitions/models.CompanyInfo'
+      company_representative:
+        $ref: '#/definitions/models.CompanyRepresentative'
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      phone:
+        type: string
+      status:
+        type: boolean
+      tags:
+        type: string
+    type: object
+  models.CompanyInfo:
+    properties:
+      address:
+        type: string
+      btw:
+        type: string
+      company_name:
+        type: string
+      country:
+        type: string
+      kvk:
+        type: string
+      last_update:
+        type: string
+      postcode:
+        type: string
+    type: object
+  models.CompanyRepresentative:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -167,4 +214,139 @@ paths:
       summary: Updates a building
       tags:
       - buildings
+  /companies:
+    get:
+      description: Gets a list of all companies
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Company'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Retrieves all companies
+      tags:
+      - companies
+    post:
+      consumes:
+      - application/json
+      description: Adds a new company to the database
+      parameters:
+      - description: Company data
+        in: body
+        name: company
+        required: true
+        schema:
+          $ref: '#/definitions/models.Company'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Company'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Creates a new company
+      tags:
+      - companies
+  /companies/{id}:
+    delete:
+      description: Deletes a specific company using its ID
+      parameters:
+      - description: Company ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Deletes a company
+      tags:
+      - companies
+    get:
+      description: Gets a specific company using its ID
+      parameters:
+      - description: Company ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Company'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Retrieves a company by ID
+      tags:
+      - companies
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing company by ID
+      parameters:
+      - description: Company ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated company data
+        in: body
+        name: company
+        required: true
+        schema:
+          $ref: '#/definitions/models.Company'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Company'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Updates a company
+      tags:
+      - companies
 swagger: "2.0"
