@@ -1,4 +1,170 @@
+basePath: /
+definitions:
+  models.Building:
+    properties:
+      address:
+        type: string
+      calculate_type:
+        type: string
+      created_date:
+        type: string
+      email:
+        type: string
+      house_number:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      note:
+        type: string
+      plaats:
+        type: string
+      postal_code:
+        type: string
+      status:
+        type: boolean
+    type: object
+host: localhost:8080
 info:
   contact: {}
-paths: {}
+  description: REST API documentation for ERP panel.
+  title: ERP Panel API
+  version: "1.0"
+paths:
+  /buildings:
+    get:
+      description: Gets a list of all buildings
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Building'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Retrieves all buildings
+      tags:
+      - buildings
+    post:
+      consumes:
+      - application/json
+      description: Adds a new building to the database
+      parameters:
+      - description: Building data
+        in: body
+        name: building
+        required: true
+        schema:
+          $ref: '#/definitions/models.Building'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Building'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Creates a new building
+      tags:
+      - buildings
+  /buildings/{id}:
+    delete:
+      description: Deletes a specific building using its ID
+      parameters:
+      - description: Building ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Deletes a building
+      tags:
+      - buildings
+    get:
+      description: Gets a specific building using its ID
+      parameters:
+      - description: Building ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Building'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Retrieves a building by ID
+      tags:
+      - buildings
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing building by ID
+      parameters:
+      - description: Building ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated building data
+        in: body
+        name: building
+        required: true
+        schema:
+          $ref: '#/definitions/models.Building'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Building'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Updates a building
+      tags:
+      - buildings
 swagger: "2.0"
