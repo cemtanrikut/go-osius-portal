@@ -29,5 +29,15 @@ func SetupRouter() *gin.Engine {
 	// 📌 **Dosya Yükleme (Resim/Dosya)**
 	r.POST("/upload", handlers.UploadFile) // Dosya yükleme endpoint'i
 
+	// 📌 **Bina İşlemleri**
+	buildingRoutes := r.Group("/buildings")
+	{
+		buildingRoutes.GET("", handlers.GetBuildings)          // Tüm binaları getir
+		buildingRoutes.GET("/:id", handlers.GetBuildingByID)   // Belirli bir binayı getir
+		buildingRoutes.POST("", handlers.CreateBuilding)       // Yeni bina ekle
+		buildingRoutes.PUT("/:id", handlers.UpdateBuilding)    // Binayı güncelle
+		buildingRoutes.DELETE("/:id", handlers.DeleteBuilding) // Binayı sil
+	}
+
 	return r
 }
