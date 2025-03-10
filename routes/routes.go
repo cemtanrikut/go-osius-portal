@@ -39,5 +39,29 @@ func SetupRouter() *gin.Engine {
 		buildingRoutes.DELETE("/:id", handlers.DeleteBuilding) // Binayı sil
 	}
 
+	// 📌 **Müşteri İşlemleri**
+	customerRoutes := r.Group("/customers")
+	{
+		customerRoutes.GET("", handlers.GetCustomers)          // Tüm müşterileri getir
+		customerRoutes.GET("/:id", handlers.GetCustomerByID)   // Belirli bir müşteriyi getir
+		customerRoutes.POST("", handlers.CreateCustomer)       // Yeni müşteri ekle
+		customerRoutes.PUT("/:id", handlers.UpdateCustomer)    // Müşteriyi güncelle
+		customerRoutes.DELETE("/:id", handlers.DeleteCustomer) // Müşteriyi sil
+	}
+
+	// 📌 **Auth İşlemleri**
+	authRoutes := r.Group("/auth")
+	{
+		authRoutes.POST("/login", handlers.Login)   // Kullanıcı giriş yapar
+		authRoutes.POST("/logout", handlers.Logout) // Kullanıcı çıkış yapar
+	}
+
+	// 📌 **Bildirim İşlemleri**
+	notificationRoutes := r.Group("/notifications")
+	{
+		notificationRoutes.GET("", handlers.GetNotifications)                // Tüm bildirimleri getir
+		notificationRoutes.PUT("/:id/read", handlers.MarkNotificationAsRead) // Bildirimi okundu olarak işaretle
+	}
+
 	return r
 }
