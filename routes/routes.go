@@ -5,39 +5,29 @@ import (
 	"main.go/handlers"
 )
 
-func SetupRoutes(r *gin.Engine) {
-	// Company
-	r.POST("/companies", handlers.CreateCompany)
-	r.GET("/companies", handlers.GetCompanies)
-	r.GET("/companies/:id", handlers.GetCompanyByID)
-	r.PUT("/companies/:id", handlers.UpdateCompany)
-	r.DELETE("/companies/:id", handlers.DeleteCompany)
+// SetupRouter - Tüm route'ları burada tanımlıyoruz
+func SetupRouter() *gin.Engine {
+	r := gin.Default()
 
-	// Building
-	r.POST("/buildings", handlers.CreateBuilding)
-	r.GET("/buildings", handlers.GetBuildings)
-	r.GET("/buildings/:id", handlers.GetBuildingByID)
-	r.PUT("/buildings/:id", handlers.UpdateBuilding)
-	r.DELETE("/buildings/:id", handlers.DeleteBuilding)
+	// 📌 **Ticket İşlemleri**
+	ticketRoutes := r.Group("/tickets")
+	{
+		ticketRoutes.GET("", handlers.GetTickets)          // Tüm ticket'ları getir
+		ticketRoutes.GET("/:id", handlers.GetTicketByID)   // Belirli ticket'ı getir
+		ticketRoutes.POST("", handlers.CreateTicket)       // Yeni ticket oluştur
+		ticketRoutes.PUT("/:id", handlers.UpdateTicket)    // Ticket güncelle
+		ticketRoutes.DELETE("/:id", handlers.DeleteTicket) // Ticket sil
+	}
 
-	// Room
-	r.POST("/rooms", handlers.CreateRoom)
-	r.GET("/rooms", handlers.GetRooms)
-	r.GET("/rooms/:id", handlers.GetRoomByID)
-	r.PUT("/rooms/:id", handlers.UpdateRoom)
-	r.DELETE("/rooms/:id", handlers.DeleteRoom)
+	// 📌 **Mesaj İşlemleri (Belirli Ticket İçin)**
+	messageRoutes := r.Group("/tickets/:id/messages")
+	{
+		messageRoutes.GET("", handlers.GetMessages)    // Ticket'a ait mesajları getir
+		messageRoutes.POST("", handlers.CreateMessage) // Ticket'a yeni mesaj ekle
+	}
 
-	// Member
-	r.POST("/members", handlers.CreateMember)
-	r.GET("/members", handlers.GetMembers)
-	r.GET("/members/:id", handlers.GetMemberByID)
-	r.PUT("/members/:id", handlers.UpdateMember)
-	r.DELETE("/members/:id", handlers.DeleteMember)
+	// 📌 **Dosya Yükleme (Resim/Dosya)**
+	r.POST("/upload", handlers.UploadFile) // Dosya yükleme endpoint'i
 
-	// Ticket
-	r.POST("/tickets", handlers.CreateTicket)
-	r.GET("/tickets", handlers.GetTickets)
-	r.GET("/tickets/:id", handlers.GetTicketByID)
-	r.PUT("/tickets/:id", handlers.UpdateTicket)
-	r.DELETE("/tickets/:id", handlers.DeleteTicket)
+	return r
 }
