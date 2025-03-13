@@ -1,6 +1,6 @@
 FROM golang:1.21
 
-WORKDIR /app
+WORKDIR /
 
 COPY . .
 
@@ -12,4 +12,4 @@ ENV GOARCH=amd64
 
 RUN go build -o main .
 
-CMD ["/app/main"]
+CMD ["/main"]
