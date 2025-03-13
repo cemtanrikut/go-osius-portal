@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"main.go/handlers"
 )
@@ -8,6 +9,9 @@ import (
 // SetupRouter - Tüm route'ları burada tanımlıyoruz
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
+
+	// 🔥 CORS middleware ekleyelim
+	r.Use(cors.Default())
 
 	// 📌 **Ticket İşlemleri**
 	ticketRoutes := r.Group("/tickets")
@@ -49,6 +53,15 @@ func SetupRouter() *gin.Engine {
 		customerRoutes.DELETE("/:id", handlers.DeleteCustomer) // Müşteriyi sil
 	}
 
+	workerRoutes := r.Group("/workers")
+	{
+		workerRoutes.GET("", handlers.GetWorkers)            // Tüm binaları getir
+		workerRoutes.GET("/:id", handlers.GetBuildingByID)   // Belirli bir binayı getir
+		workerRoutes.POST("", handlers.CreateWorker)         // Yeni bina ekle
+		workerRoutes.PUT("/:id", handlers.UpdateBuilding)    // Binayı güncelle
+		workerRoutes.DELETE("/:id", handlers.DeleteBuilding) // Binayı sil
+	}
+
 	// 📌 **Auth İşlemleri**
 	authRoutes := r.Group("/auth")
 	{
@@ -62,6 +75,9 @@ func SetupRouter() *gin.Engine {
 		notificationRoutes.GET("", handlers.GetNotifications)                // Tüm bildirimleri getir
 		notificationRoutes.PUT("/:id/read", handlers.MarkNotificationAsRead) // Bildirimi okundu olarak işaretle
 	}
+
+	// 📌 **Dashboard Verileri**
+	r.GET("/dashboard", handlers.GetDashboardData) // 📊 Dashboard verilerini getir
 
 	return r
 }

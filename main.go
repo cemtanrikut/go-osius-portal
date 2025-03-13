@@ -3,9 +3,6 @@ package main
 import (
 	_ "main.go/docs"
 
-	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 	"main.go/config"
 	"main.go/routes"
 )
@@ -18,12 +15,12 @@ import (
 func main() {
 	config.ConnectDatabase()
 
-	r := gin.Default()
+	// r := gin.Default()
 
-	// Swagger UI
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	// // Swagger UI
+	// r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	routes.SetupRoutes(r)
+	r := routes.SetupRouter()
 
 	r.Run(":8080")
 }

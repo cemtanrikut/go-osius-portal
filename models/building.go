@@ -4,6 +4,7 @@ import "gorm.io/gorm"
 
 type Building struct {
 	gorm.Model
+	ID            string `json:"id"`
 	Name          string `json:"name"`
 	Address       string `json:"address"`
 	HouseNo       string `json:"houseNo"`
