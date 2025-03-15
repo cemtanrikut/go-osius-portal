@@ -14,7 +14,7 @@ type Customer struct {
 	Email                string          `json:"email"`
 	Password             string          `json:"password"`
 	Website              string          `json:"website"`
-	Logo                 string          `json:"logo"`
+	Logo                 *string         `json:"logo"`
 	Status               string          `json:"status"`
 	Supplier             bool            `json:"supplier"`
 	BtwNumber            string          `json:"btwNumber"`
@@ -23,13 +23,13 @@ type Customer struct {
 	Relatiebeheerder     string          `json:"relatiebeheerder"`
 	GlobalLocationNumber string          `json:"globalLocationNumber"`
 	Moederonderneming    string          `json:"moederonderneming"`
-	Remarks              string          `json:"remarks"`
+	Remarks              *string         `json:"remarks"`
 	Contacts             []ContactPerson `json:"contacts" gorm:"foreignKey:CustomerID"`
 }
 
 type ContactPerson struct {
 	gorm.Model
-	CustomerID uint   `json:"customerId"`
+	CustomerID string `json:"customerId"`
 	FirstName  string `json:"firstName"`
 	LastName   string `json:"lastName"`
 	Email      string `json:"email"`

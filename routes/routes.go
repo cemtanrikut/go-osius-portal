@@ -13,25 +13,43 @@ func SetupRouter() *gin.Engine {
 	// 🔥 CORS middleware ekleyelim
 	r.Use(cors.Default())
 
-	// 📌 **Ticket İşlemleri**
-	ticketRoutes := r.Group("/tickets")
-	{
-		ticketRoutes.GET("", handlers.GetTickets)          // Tüm ticket'ları getir
-		ticketRoutes.GET("/:id", handlers.GetTicketByID)   // Belirli ticket'ı getir
-		ticketRoutes.POST("", handlers.CreateTicket)       // Yeni ticket oluştur
-		ticketRoutes.PUT("/:id", handlers.UpdateTicket)    // Ticket güncelle
-		ticketRoutes.DELETE("/:id", handlers.DeleteTicket) // Ticket sil
-	}
+	// // 📌 **Ticket İşlemleri**
+	// ticketRoutes := r.Group("/tickets")
+	// {
+	// 	ticketRoutes.GET("", handlers.GetTickets)          // Tüm ticket'ları getir
+	// 	ticketRoutes.GET("/:id", handlers.GetTicketByID)   // Belirli ticket'ı getir
+	// 	ticketRoutes.POST("", handlers.CreateTicket)       // Yeni ticket oluştur
+	// 	ticketRoutes.PUT("/:id", handlers.UpdateTicket)    // Ticket güncelle
+	// 	ticketRoutes.DELETE("/:id", handlers.DeleteTicket) // Ticket sil
+	// }
 
 	// 📌 **Mesaj İşlemleri (Belirli Ticket İçin)**
-	messageRoutes := r.Group("/tickets/:id/messages")
-	{
-		messageRoutes.GET("", handlers.GetMessages)    // Ticket'a ait mesajları getir
-		messageRoutes.POST("", handlers.CreateMessage) // Ticket'a yeni mesaj ekle
-	}
+	// messageRoutes := r.Group("/tickets/:id/messages")
+	// {
+	// 	messageRoutes.GET("", handlers.GetMessages)    // Ticket'a ait mesajları getir
+	// 	messageRoutes.POST("", handlers.CreateMessage) // Ticket'a yeni mesaj ekle
+	// }
+	r.GET("/ws", handlers.HandleWebSocket) // WebSocket bağlantısı
+	go handlers.BroadcastMessages()        // Mesajları dinlemeye başla
+
+	r.GET("/messages/:ticketId", handlers.GetMessages)       // Mesajları getir
+	r.POST("/messages", handlers.CreateMessage)              // Yeni mesaj ekle
+	r.DELETE("/messages/:messageId", handlers.DeleteMessage) // Mesaj sil
 
 	// 📌 **Dosya Yükleme (Resim/Dosya)**
 	r.POST("/upload", handlers.UploadFile) // Dosya yükleme endpoint'i
+
+	// 📌 Ticket Routes
+	r.POST("/tickets", handlers.CreateTicket)
+	r.GET("/tickets", handlers.GetTickets)
+	r.GET("/tickets/:id", handlers.GetTicketByID)
+	r.PUT("/tickets/:id", handlers.UpdateTicket)
+	r.DELETE("/tickets/:id", handlers.DeleteTicket)
+
+	// 📌 File Routes
+	r.POST("/tickets/:id/files", handlers.UploadFile)
+	r.GET("/tickets/:id/files", handlers.GetFilesByTicketID)
+	r.DELETE("/files/:id", handlers.DeleteFile)
 
 	// 📌 **Bina İşlemleri**
 	buildingRoutes := r.Group("/buildings")

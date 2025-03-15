@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -39,8 +40,14 @@ func CreateCustomer(c *gin.Context) {
 
 	customer.ID = newID // Yeni ID'yi ata
 
+	// **Tüm ContactPerson kayıtlarına CustomerID'yi ekle**
+	for i := range customer.Contacts {
+		customer.Contacts[i].CustomerID = newID
+	}
+
 	// DB'ye kaydet
 	if err := config.DB.Create(&customer).Error; err != nil {
+		log.Println("Error inserting customer:", err) // 🔹 Daha fazla hata detayı logla
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create customer"})
 		return
 	}
