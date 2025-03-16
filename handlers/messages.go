@@ -18,6 +18,7 @@ var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
 		return true
 	},
+	EnableCompression: true, // 🚀 **TLS desteği için ekledik**
 }
 
 // 📌 **WebSocket Bağlantılarını Yönetmek İçin Map**
