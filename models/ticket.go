@@ -11,9 +11,9 @@ type Ticket struct {
 	Title            string `json:"title"`
 	Description      string `json:"description"`
 	WorkerID         string `json:"workerId"` // Foreign Key
-	Worker           string `gorm:"foreignKey:WorkerID"`
+	Worker           string `json:"worker"`
 	BuildingID       string `json:"buildingId"`
-	Building         string `gorm:"foreignKey:BuildingID"`
+	Building         string `json:"building"`
 	CustomerID       string `json:"customerId"`
 	Customer         string `gorm:"foreignKey:CustomerID"`
 	NotificationType string `json:"notificationType"`
