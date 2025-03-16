@@ -29,37 +29,45 @@ var mutex = sync.Mutex{} // Çoklu işlem için senkronizasyon
 func HandleWebSocket(c *gin.Context) {
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
-		fmt.Println("WebSocket bağlantı hatası:", err)
+		fmt.Println("❌ WebSocket bağlantı hatası:", err)
 		return
 	}
-	defer conn.Close()
 
 	// 📌 **Yeni bağlantıyı kaydet**
 	mutex.Lock()
 	clients[conn] = true
 	mutex.Unlock()
 
-	// 📌 **Yeni mesajları dinle**
-	for {
-		var msg models.Message
-		err := conn.ReadJSON(&msg)
-		if err != nil {
-			fmt.Println("Mesaj okuma hatası:", err)
+	fmt.Println("✅ Yeni WebSocket bağlantısı:", conn.RemoteAddr())
+
+	// 📌 **Bağlantıyı dinle**
+	go func() {
+		defer func() {
 			mutex.Lock()
 			delete(clients, conn)
 			mutex.Unlock()
-			break
-		}
+			conn.Close()
+			fmt.Println("❌ WebSocket bağlantısı kapandı:", conn.RemoteAddr())
+		}()
 
-		// 📌 **Mesajı veritabanına kaydet**
-		if err := config.DB.Create(&msg).Error; err != nil {
-			fmt.Println("DB'ye mesaj kaydedilemedi:", err)
-			continue
-		}
+		for {
+			var msg models.Message
+			err := conn.ReadJSON(&msg)
+			if err != nil {
+				fmt.Println("❌ Mesaj okuma hatası:", err)
+				break
+			}
 
-		// 📌 **Mesajı yayına gönder**
-		broadcast <- msg
-	}
+			// 📌 **Mesajı veritabanına kaydet**
+			if err := config.DB.Create(&msg).Error; err != nil {
+				fmt.Println("❌ DB'ye mesaj kaydedilemedi:", err)
+				continue
+			}
+
+			// 📌 **Mesajı yayına gönder**
+			broadcast <- msg
+		}
+	}()
 }
 
 // 📌 **WebSocket Üzerinden Mesajları Yayınlama**
@@ -71,9 +79,11 @@ func BroadcastMessages() {
 		for conn := range clients {
 			err := conn.WriteJSON(msg)
 			if err != nil {
-				fmt.Println("Mesaj gönderme hatası:", err)
+				fmt.Println("❌ Mesaj gönderme hatası:", err)
 				conn.Close()
 				delete(clients, conn)
+			} else {
+				fmt.Println("📩 Mesaj gönderildi:", msg.Text)
 			}
 		}
 		mutex.Unlock()

@@ -81,11 +81,14 @@ func SetupRouter() *gin.Engine {
 	}
 
 	// 📌 **Auth İşlemleri**
-	authRoutes := r.Group("/auth")
-	{
-		authRoutes.POST("/login", handlers.Login)   // Kullanıcı giriş yapar
-		authRoutes.POST("/logout", handlers.Logout) // Kullanıcı çıkış yapar
-	}
+	// authRoutes := r.Group("/auth")
+	// {
+	// 	authRoutes.POST("/login", handlers.Login)   // Kullanıcı giriş yapar
+	// 	authRoutes.POST("/logout", handlers.Logout) // Kullanıcı çıkış yapar
+	// }
+
+	// 📌 **Login Endpoint'i**
+	r.POST("/login", handlers.Login)
 
 	// 📌 **Bildirim İşlemleri**
 	notificationRoutes := r.Group("/notifications")

@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "main.go/docs"
+	"main.go/handlers"
 
 	"main.go/config"
 	"main.go/routes"
@@ -21,6 +22,8 @@ func main() {
 	// r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	r := routes.SetupRouter()
+
+	go handlers.BroadcastMessages() // Mesajları dinlemeye başla
 
 	r.Run(":8080")
 }
