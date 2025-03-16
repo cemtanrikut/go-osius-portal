@@ -21,7 +21,7 @@ type Ticket struct {
 	Files            []File `gorm:"foreignKey:TicketID"`
 	Status           string `json:"status"` // ToDo, InProgress, Done
 	CreatorID        string `json:"creatorId"`
-	Creator          string `gorm:"foreignKey:CreatorID"` // Ticket'i oluşturan kullanıcı
+	CreatedBy        string `json:"created_by"` // Ticket'i oluşturan kullanıcı
 }
 
 // File Modeli
