@@ -51,6 +51,8 @@ func SetupRouter() *gin.Engine {
 	r.GET("/tickets/:id/files", handlers.GetFilesByTicketID)
 	r.DELETE("/files/:id", handlers.DeleteFile)
 
+	r.Static("/uploads", "./uploads")
+
 	// 📌 **Bina İşlemleri**
 	buildingRoutes := r.Group("/buildings")
 	{

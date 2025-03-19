@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"main.go/config"
 	"main.go/models"
@@ -42,17 +43,19 @@ func CreateTicket(c *gin.Context) {
 	c.JSON(http.StatusCreated, ticket)
 }
 
-// 📌 **Tüm Ticketları Listeleme**
+// 📌 **Silinmemiş Ticket'ları Listeleme**
 func GetTickets(c *gin.Context) {
 	var tickets []models.Ticket
-	result := config.DB.Unscoped().Preload("Files").Find(&tickets) // 🔥 Silinmiş kayıtları da getir
+
+	// 📌 Sadece "deleted_at" alanı NULL olan kayıtları getir
+	result := config.DB.Where("deleted_at IS NULL").Preload("Files").Find(&tickets)
 
 	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
 		return
 	}
 
-	fmt.Println("📌 API'den Dönen Tüm Ticketlar:", tickets) // ✅ Terminalde kontrol et
+	fmt.Println("📌 API'den Dönen Silinmemiş Ticketlar:", tickets) // ✅ Terminalde kontrol et
 	c.JSON(http.StatusOK, tickets)
 }
 
@@ -99,19 +102,31 @@ func UpdateTicket(c *gin.Context) {
 	c.JSON(http.StatusOK, ticket)
 }
 
-// 📌 **Ticket Silme**
+// 📌 **Ticket Silme (Soft Delete)**
 func DeleteTicket(c *gin.Context) {
-	id := c.Param("id")
-	var ticket models.Ticket
-	if err := config.DB.First(&ticket, id).Error; err != nil {
+	ticketID := c.Param("id")
+
+	if ticketID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Ticket ID is required"})
+		return
+	}
+
+	// 🎯 **Ticket'ı bul ve deleted_at alanını güncelle**
+	result := config.DB.Model(&models.Ticket{}).
+		Where("ticket_id = ?", ticketID).
+		Update("deleted_at", time.Now())
+
+	// Eğer güncelleme başarısız olursa
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete ticket"})
+		return
+	}
+
+	// Eğer güncellenen kayıt yoksa (ticket bulunamadıysa)
+	if result.RowsAffected == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Ticket not found"})
 		return
 	}
 
-	// Önce ilgili dosyaları sil
-	config.DB.Where("ticket_id = ?", id).Delete(&models.File{})
-
-	// Sonra ticket'ı sil
-	config.DB.Delete(&ticket)
-	c.JSON(http.StatusOK, gin.H{"message": "Ticket deleted successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "Ticket successfully deleted"})
 }

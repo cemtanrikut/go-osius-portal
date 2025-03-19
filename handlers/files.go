@@ -13,11 +13,25 @@ import (
 
 // 📌 **Dosya Yükleme ve Ticket'a Bağlama**
 func UploadFile(c *gin.Context) {
-	ticketID := c.Param("ticketId")
+	ticketID := c.Param("id")
 
-	// Ticket ID'nin var olup olmadığını kontrol et
+	// 🔹 Eğer URL boşsa, FormData'dan almayı dene
+	if ticketID == "" {
+		ticketID = c.PostForm("ticketId")
+	}
+
+	fmt.Println("Gelen ID : ", ticketID)
+
+	// // Ticket ID'nin var olup olmadığını kontrol et
+	// var ticket models.Ticket
+	// if err := config.DB.First(&ticket, ticketID).Error; err != nil {
+	// 	c.JSON(http.StatusNotFound, gin.H{"error": "Ticket not found"})
+	// 	return
+	// }
+
+	// Eğer ticket ID string olarak saklanıyorsa, GORM ile şu şekilde kontrol et
 	var ticket models.Ticket
-	if err := config.DB.First(&ticket, ticketID).Error; err != nil {
+	if err := config.DB.Where("ticket_id = ?", ticketID).First(&ticket).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Ticket not found"})
 		return
 	}
@@ -60,9 +74,23 @@ func UploadFile(c *gin.Context) {
 
 // 📌 **Bir Ticket'a Ait Dosyaları Getirme**
 func GetFilesByTicketID(c *gin.Context) {
-	ticketID := c.Param("ticketId")
+	ticketID := c.Param("id")
+
+	// 🔹 Eğer URL boşsa, FormData'dan almayı dene
+	if ticketID == "" {
+		ticketID = c.PostForm("ticketId")
+	}
+
+	fmt.Println("Gelen ID : ", ticketID)
+
 	var files []models.File
 	config.DB.Where("ticket_id = ?", ticketID).Find(&files)
+
+	// 📌 **FileURL'yi tam URL'ye çevir**
+	for i := range files {
+		files[i].FileURL = fmt.Sprintf("%s/uploads/%s", "http://localhost:8080", files[i].Filename)
+	}
+
 	c.JSON(http.StatusOK, files)
 }
 
