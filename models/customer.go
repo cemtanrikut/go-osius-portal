@@ -24,14 +24,17 @@ type Customer struct {
 	GlobalLocationNumber string          `json:"globalLocationNumber"`
 	Moederonderneming    string          `json:"moederonderneming"`
 	Remarks              *string         `json:"remarks"`
-	Contacts             []ContactPerson `json:"contacts" gorm:"foreignKey:CustomerID"`
+	Contacts             []ContactPerson `json:"contacts" gorm:"-"`
 }
 
 type ContactPerson struct {
 	gorm.Model
+	ID         string `json:"id"`
 	CustomerID string `json:"customerId"`
+	BuildingID string `json:"buildingId"`
+	Role       string `json:"role"`
 	FirstName  string `json:"firstName"`
-	LastName   string `json:"lastName"`
 	Email      string `json:"email"`
+	Password   string `json:"password"`
 	Phone      string `json:"phone"`
 }

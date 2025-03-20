@@ -87,6 +87,7 @@ func Login(c *gin.Context) {
 
 	var worker models.Worker
 	var customer models.Customer
+	var contact models.ContactPerson
 
 	// 📌 **Önce Workers tablosunda arama yap**
 	if err := config.DB.Where("email = ?", req.Email).First(&worker).Error; err == nil {
@@ -102,6 +103,23 @@ func Login(c *gin.Context) {
 		// 📌 **JWT Token oluştur ve döndür**
 		token := generateFakeJWT(worker.Email, "worker")
 		c.JSON(http.StatusOK, gin.H{"token": token, "userType": "worker"})
+		return
+	}
+
+	// 📌 **Worker bulunamadıysa, Contacts tablosuna bak**
+	if err := config.DB.Where("email = ?", req.Email).First(&contact).Error; err == nil {
+		fmt.Println("✅ Contact bulundu:", contact.Email, "Şifre:", contact.Password) // Debug log
+
+		// 🎯 **Şifreyi karşılaştır (Düz metin)**
+		if contact.Password != req.Password {
+			fmt.Println("❌ Girilen Şifre:", req.Password) // 🔥 Debug log
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Şifre yanlış!"})
+			return
+		}
+
+		// 📌 **JWT Token oluştur ve döndür**
+		token := generateFakeJWT(contact.Email, "customer")
+		c.JSON(http.StatusOK, gin.H{"token": token, "userType": "contact"})
 		return
 	}
 

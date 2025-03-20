@@ -73,6 +73,14 @@ func SetupRouter() *gin.Engine {
 		customerRoutes.DELETE("/:id", handlers.DeleteCustomer) // Müşteriyi sil
 	}
 
+	// Contacts
+	r.POST("/contacts", handlers.CreateContact)                              // 📌 Yeni Contact oluştur
+	r.GET("/contacts", handlers.GetCustomerContacts)                         // 📌 Tüm Contactları getir
+	r.GET("/contacts/customer/:customerId", handlers.GetCustomerContactByID) // 📌 Belirli bir Customer'ın Contact bilgisini getir
+	r.GET("/contacts/building/:buildingId", handlers.GetBuildingContactByID) // 📌 Belirli bir Building'in Contact bilgisini getir
+	r.PUT("/contacts/:id", handlers.UpdateContact)                           // 📌 Contact güncelle
+	r.DELETE("/contacts/:id", handlers.DeleteContact)                        // 📌 Contact sil
+
 	workerRoutes := r.Group("/workers")
 	{
 		workerRoutes.GET("", handlers.GetWorkers)            // Tüm binaları getir
